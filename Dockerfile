@@ -14,7 +14,7 @@ EXPOSE 8080
 #ARG JAR_FILE=target/hello-spring-1.0.0.jar
 
 # Add the application's jar to the container
-ADD /target/hello-spring-1.0.0.jar /usr/local/tomcat/webapps/demo-spring.jar
+ADD /workspace/target/hello-spring-1.0.0.jar /usr/local/tomcat/webapps/demo-spring.jar
 
 # Run the jar file
 RUN sh -c 'touch /usr/local/tomcat/webapps/demo-spring.jar'
