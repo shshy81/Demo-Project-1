@@ -16,4 +16,4 @@ spec:
     spec:
       containers:
       - name: demo-spring
-        image: asia.gcr.io/mineral-hangar-288307/demo-spring:$TAG_NAME
+        image: asia.gcr.io/mineral-hangar-288307/demo-spring:v1

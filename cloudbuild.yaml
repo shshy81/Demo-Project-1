@@ -54,7 +54,7 @@ steps:
         gcloud container clusters get-credentials "$${CLUSTER}" \
           --project "$${PROJECT}" \
           --zone "$${ZONE}"
-        sed -i 's|asia.gcr.io/cloud-solutions-images/demo-spring:.*|asia.gcr.io/$PROJECT_ID/demo-spring:$TAG_NAME|' demo-dp.yaml
+        sed -i 's|demo-spring:.*|demo-spring:$TAG_NAME|' demo-dp.yaml
 
         kubectl apply -f demo-dp.yaml
         kubectl apply -f demo-svc.yaml
