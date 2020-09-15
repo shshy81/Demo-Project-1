@@ -1,9 +1,9 @@
 steps:
 
 ### Package
-- id: 'package'
-  name: 'gcr.io/cloud-builders/mvn'
-  args: ['install']
+#- id: 'package'
+#  name: 'gcr.io/cloud-builders/mvn'
+#  args: ['install']
 #  name: maven:3-jdk-8
 #  entrypoint: mvn
 #  args: ['package','-Dmaven.test.skip=true']
