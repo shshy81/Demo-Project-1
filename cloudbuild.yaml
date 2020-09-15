@@ -1,6 +1,15 @@
 steps:
 
-### Build
+### Package
+#- id: 'package'
+#  name: maven:3-jdk-8
+#  entrypoint: 'bash'
+#  args:
+#    - '-c'
+#    - |
+#        mvn clean install
+
+#### Build
 - id: 'build'
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
