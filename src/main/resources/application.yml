@@ -1,0 +1,14 @@
+#Profile
+spring:
+  profiles:
+    active: local
+
+server:
+  port: 8000
+
+--- #local 환경 ==================================================================================
+spring:
+  profiles: local
+  devtools:           #jsp 자동변경
+    livereload:
+      enabled: true

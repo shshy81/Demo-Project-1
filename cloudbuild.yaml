@@ -1,0 +1,63 @@
+steps:
+
+### Build
+- id: 'build'
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+        docker build -t asia.gcr.io/$PROJECT_ID/demo-spring:$TAG_NAME .
+
+#  args: ['build', '-t', 'asia.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA', '--build-arg=JAR_FILE=target/hello-spring-1.0.0.jar', '.']
+#  images: ['asia.io/$PROJECT_ID/demo-spring-build:v1']
+
+### GCR(Google Container Registry) Push
+- id: 'push'
+  name: "gcr.io/cloud-builders/docker"
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+        docker push asia.gcr.io/$PROJECT_ID/demo-spring:$TAG_NAME
+
+#  args: ["push", "asia.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"]
+
+### Deploy
+- id: 'deploy'
+  name: 'gcr.io/cloud-builders/gcloud'
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+#    - 'KUBECONFIG=/kube/config'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+        CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}
+        PROJECT=$$(gcloud config get-value core/project)
+        ZONE=${_CLOUDSDK_COMPUTE_ZONE}
+        gcloud container clusters get-credentials "$${CLUSTER}" \
+          --project "$${PROJECT}" \
+          --zone "$${ZONE}"
+        sed -i 's|asia.gcr.io/cloud-solutions-images/demo-spring:.*|asia.gcr.io/$PROJECT_ID/demo-spring:$TAG_NAME|' demo-dp.yaml
+
+        kubectl apply -f demo-dp.yaml
+        kubectl apply -f demo-svc.yaml
+
+#    args: [ "run",
+#            "deploy",
+#            "$REPO_NAME",
+#            "--image",
+#            "asia.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA",
+#            "--region",
+#            "$ZONE",
+#            "--platform",
+#            "managed",
+#            "--port",
+#            "5000",
+#            "--allow-unauthenticated",
+#            ]
+
+
+
