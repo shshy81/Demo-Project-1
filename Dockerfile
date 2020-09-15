@@ -1,9 +1,13 @@
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-RUN echo ${JAR_FILE}
-ARG JAR_FILE
-ADD ${JAR_FILE} demo-spring.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/demo-spring.jar"]
+FROM maven:3.5-jdk-8-slim AS build
+WORKDIR /home/app
+COPY src     /home/app/src
+COPY pom.xml /home/app
+RUN mvn clean package
+
+FROM openjdk:8-jre-slim
+COPY --from=build /home/app/target/hello-spring-1.0.0.jar /usr/local/tomcat/webapps/demo-spring.jar
+EXPOSE 8081
+ENTRYPOINT ["java","-jar","/usr/local/tomcat/webapps/demo-spring.jar"]
 
 
 # Start with a base image containing Java runtime
