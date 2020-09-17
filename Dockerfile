@@ -2,11 +2,10 @@ FROM maven:3.5-jdk-8-slim AS build
 WORKDIR /home/app
 COPY src     /home/app/src
 COPY pom.xml /home/app
-RUN mvn clean package
+RUN mvn clean package -D maven.test.skip=true
 
 FROM openjdk:8-jre-slim
 COPY --from=build /home/app/target/hello-spring-1.0.0.jar /usr/local/tomcat/webapps/demo-spring.jar
-EXPOSE 8081
 ENTRYPOINT ["java","-jar","/usr/local/tomcat/webapps/demo-spring.jar"]
 
 
